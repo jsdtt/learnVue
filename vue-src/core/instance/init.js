@@ -31,9 +31,12 @@ export function initMixin (Vue: Class<Component>) {
     /*一个防止vm实例自身被观察的标志位*/
     vm._isVue = true
     // merge options
+    // TODO: 先不看特殊的内部组件实例
     if (options && options._isComponent) {
       // optimize internal component instantiation
+      // 优化内部组件实例
       // since dynamic options merging is pretty slow, and none of the
+      // 因为配置项合并很慢, 需要特殊对待
       // internal component options needs special treatment.
       initInternalComponent(vm, options)
     } else {
@@ -98,9 +101,17 @@ function initInternalComponent (vm: Component, options: InternalComponentOptions
   }
 }
 
+/**
+ * 获取Vue实例的option属性
+ *
+ * @export
+ * @param {Class<Component>} Ctor
+ * @returns
+ */
 export function resolveConstructorOptions (Ctor: Class<Component>) {
   let options = Ctor.options
   /*如果存在父类的时候*/
+  // ../global-api/extend.js 扩展后会为其创建一个super属性指向父类
   if (Ctor.super) {
     /*对其父类进行resolveConstructorOptions，获取父类的options*/
     const superOptions = resolveConstructorOptions(Ctor.super)
